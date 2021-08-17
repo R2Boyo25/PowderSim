@@ -6,7 +6,7 @@ from powder import Powder
 import pygame, random, time, threading
 
 pygame.init()
-window = pygame.display.set_mode((1000, 200))
+window = pygame.display.set_mode((500, 200))
 w, h = pygame.display.get_surface().get_size()
 clock = pygame.time.Clock()
 clock.tick()
@@ -20,14 +20,19 @@ def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
-for i in range(1, w):
-    b.append(Powder((i, 0), (random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)), random.randrange(0, 15), random.randrange(2, 4))) # round((1*i)/4)
+'''for i in range(1, w):
+    b.append(Powder((i, 0), (random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)), random.randrange(0, 15), random.randrange(2, 4))) # round((1*i)/4)'''
+
+for i in range(1, 100000):
+    b.append(Powder((250, 30), (random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)), random.randrange(0, 15))) # round((1*i)/4)
 
 run = True
 a = 0
 pos = True
 frame = 0
 curp = [{} for i in range(5)]
+#fps = 30
+chunkAmount = 100
 
 def simPix(frame, window, curp, b, wh, frame2):
     for i in frame:
@@ -37,9 +42,12 @@ def simPix(frame, window, curp, b, wh, frame2):
 
 
 while run:
+
+    #dt = clock.tick(60)
+
     if frame == 0:
         random.shuffle(b)
-        c = [i for i in chunks(b, round(len(b)/5))]
+        c = [i for i in chunks(b, round(len(b)/ chunkAmount))]
     '''for i in range(len(curp)):
         curp[i]={}'''
     curp[frame] = {}
@@ -79,7 +87,7 @@ while run:
     
     for FrameGrid in curp:
         for i in FrameGrid.keys():
-            window.set_at(i, FrameGrid[i])
+            window.set_at(i, (255,255,255))#FrameGrid[i])
 
     """
     for x in range(rect.width):
@@ -100,8 +108,10 @@ while run:
     if (count % 100 == 0):
         dt_sum = sum(dt_list)
         if dt_sum > 0:
-           pygame.display.set_caption("FPS: " + str(round(len(dt_list) / sum(dt_list) * 1000)))
-           
+           pygame.display.set_caption("FPS: " + str(round(len(dt_list) / sum(dt_list) * 1000)) + ", TPS: " + str(round(len(dt_list) / sum(dt_list) * 1000) / chunkAmount))
+           #fps = round(len(dt_list) / sum(dt_list) * 1000)
+        
+
     #time.sleep(0.01)
     frame += 1
     if frame == 5:
