@@ -119,12 +119,7 @@ Particle GetParticle(list<Particle>Particles, int i) {
 };
 
 int main () {
-	XEvent event;		
-	KeySym key;			
-	char text[255];		
-
   list<Particle> Particles;
-  list<Particle> Particles1;
 
   for (int i = -1; i < ParticleAmount; i++) {
 	Particle a(CenterX, 30, 0, i, 1);
