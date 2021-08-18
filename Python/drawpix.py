@@ -19,7 +19,7 @@ def chunks(lst, n):
 '''for i in range(1, w):
     b.append(Powder((i, 0), (random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)), random.randrange(0, 15), random.randrange(2, 4))) # round((1*i)/4)'''
 
-for i in range(1, 10000):
+for i in range(1, 5000):
     b.append(Powder((250, 30), (random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)), random.randrange(0, 15))) # round((1*i)/4)
 
 run = True
@@ -27,7 +27,7 @@ a = 0
 pos = True
 frame = 0
 curp = [{} for i in range(5)]
-chunkAmount = 10
+chunkAmount = 5
 
 def simPix(frame, window, curp, b, wh, frame2):
     for i in frame:
