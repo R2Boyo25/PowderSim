@@ -9,7 +9,7 @@
 #include <random>
 #include <experimental/random>
 
-/*#include "powder.h"*/
+//#include "powder.h"
 
 using namespace std;
 
@@ -97,7 +97,6 @@ class Particle {
 		}
 };
 
-/* here are our X variables */
 Display *dis;
 int screen;
 Window win;
@@ -110,7 +109,6 @@ int CenterY = WindowX / 2; // center for y
 int ParticleSize = 8; // particles width / height
 int ParticleAmount = 10000 / ParticleSize; // amount of particles to spawn
 
-/* here are our X routines declared! */
 void init_x();
 void close_x();
 void redraw();
@@ -120,12 +118,10 @@ Particle GetParticle(list<Particle>Particles, int i) {
   return *it1;
 };
 
-int frame = 0;
-
 int main () {
-	XEvent event;		/* the XEvent declaration !!! */
-	KeySym key;		/* a dealie-bob to handle KeyPress Events */	
-	char text[255];		/* a char buffer for KeyPress Events */
+	XEvent event;		
+	KeySym key;			
+	char text[255];		
 
   list<Particle> Particles;
   list<Particle> Particles1;
@@ -134,80 +130,27 @@ int main () {
 	Particle a(CenterX, 30, 0, i, 1);
 	Particles.push_back(a);
   }
-  /*
-  Particle a(5, 5);
-
-  Particles.push_back(a);
-  */
 
 	init_x();
 
-	/* look for events forever... */
 	while(1) {		
-		if (frame == 2) {
-			frame = 0;
+
+		redraw();
+
+		std::list<Particle>::iterator it;
+
+		for (Particle & particle : Particles) {
+			particle.Gravity(WindowX, WindowY);
+			particle.Collision(particle, Particles);
+			particle.Draw(dis, win, gc, ParticleSize);
+			XFlush(dis);
 		}
-		else if (frame == 1){}
-		else if (frame == 0) {
-			
-		}
-		/* get the next event and stuff it into our event variable.
-		   Note:  only events we set the mask for are detected!
-		*/
-		//XNextEvent(dis, &event);
-
-    redraw();
-
-    std::list<Particle>::iterator it;
-
-    for (Particle & particle : Particles) {
-        particle.Gravity(WindowX, WindowY);
-		particle.Collision(particle, Particles);
-		//particle.Collision(particle, Particles);
-		particle.Draw(dis, win, gc, ParticleSize);
-		XFlush(dis);
-    }
-
-	//XFlush(dis);
-	//sleep(0.5);
-
-	frame += 1;
-
-    /*GetParticle(Particles, 1).Draw(dis, win, gc);*/
-	
-		//if (event.type==Expose && event.xexpose.count==0) {
-		/* the window was exposed redraw it! */
-		//	redraw();
-		//}
-    /*
-		if (event.type==KeyPress&&
-		    XLookupString(&event.xkey,text,255,&key,0)==1) {
-		/\* use the XLookupString routine to convert the invent
-		   KeyPress data into regular text.  Weird but necessary...
-		*\/
-			if (text[0]=='q') {
-				close_x();
-			}
-			printf("You pressed the %c key!\n",text[0]);
-		}
-    */
-    
-		if (event.type==ButtonPress) {
-		/*tell where the mouse Button was Pressed */
-			/*int xx=event.xbutton.x,
-			    yy=event.xbutton.y;
-
-			strcpy(text,"X is FUN!");
-			XSetForeground(dis,gc,rand()%event.xbutton.x%255);
-			XDrawString(dis,win,gc,x,y, text, strlen(text));
-      XDrawPoint(dis, win, gc, x, y);*/
-		}
-    
 	}
 }
 
-void init_x() {
-/* get the colors black and white (see section for details) */        
+// below is not my code
+
+void init_x() {       
 	unsigned long black,white;
 
 	dis=XOpenDisplay((char *)0);
