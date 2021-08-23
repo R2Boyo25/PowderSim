@@ -33,13 +33,14 @@ class Powder():
                     self.y = wh[1]-1
     
     def Coll(self, lst):
-        for i in lst:
-            if i is not self:
-                if i.x == self.x and i.y == self.y:
-                    if random.choice((0,1)):
-                        self.x += random.choice((-5, 5))
-                    else:
-                        self.y += random.choice((-5, 5))
+        try:
+            if len(lst[self.x-1][self.y-1]) > 1:
+                if random.choice((0,1)):
+                    self.x += random.choice((-5, 5))
+                else:
+                    self.y += random.choice((-5, 5))
+        except KeyError:
+            pass
     
     def Bounce(self, wh, h):
         if self.y >= wh[1] - h:
@@ -48,5 +49,4 @@ class Powder():
             self.bounce = False
 
     def Draw(self, window, curp):
-        #window.set_at((self.x, self.y), self.color)
         curp[(self.x, self.y)] = self.color
