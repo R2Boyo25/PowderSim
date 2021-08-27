@@ -1,4 +1,6 @@
 from powder import Powder
+from object import Object
+import funcs
 import pygame, random, time, threading
 
 pygame.init()
@@ -18,10 +20,11 @@ for i in range(0, w+1):
         bb[i][ii] = []
 
 bbb = bb.copy()
+objects = []
 
 #print(bb)
 
-def chunks(lst, n):
+def getchunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
@@ -35,6 +38,21 @@ for i in range(1, 50000+1):
 run = True
 frame = 0
 CurFrame = {}
+chunkAmount = 5
+
+chunks = [i for i in getchunks(b, round(len(b)/chunkAmount))]
+for i in b:
+    del b[b.index(i)]
+
+for i in chunks:
+    if i != len(i)-1:
+        o = Object()
+        for ii in i:
+            o.addParticle(ii, i)
+        objects.append(o)
+    else:
+        for ii in i:
+            b.append(ii)
 
 def simPix(frame, window, CurFrame, b, wh, frame2):
     for i in frame:
@@ -58,6 +76,12 @@ while run:
             bb[i.x-1][i.y-1].append(i)
         except KeyError:
             pass
+    for obj in objects:
+        for i in obj.particles:
+            try:
+                bb[i.x-1][i.y-1].append(i)
+            except KeyError:
+                pass
 
     for i in b:
         i.Draw(window, CurFrame)
