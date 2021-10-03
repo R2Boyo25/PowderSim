@@ -1,3 +1,6 @@
 #!/bin/bash
-c++ main.cpp -lX11 -o main
+#c++ -c *.cpp -Ofast
+#c++ *.o -lX11 -o main 
+#rm *.o
+c++ *.cpp -lX11 -o main -Ofast
 ./main
