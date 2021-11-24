@@ -7,36 +7,77 @@
 #include <unistd.h>
 using namespace std;
 #include "powder.h"
+//using namespace powder;
+using namespace funcs;
 
-class Particle {
-    int x = 0, y = 0;
-    bool bounce = false;
-    /*int color = 16777215;*/
+namespace powder {
 
-    public:
-        Particle(int Inx = 0, int Iny = 0) {
-            x = Inx;
-            y = Iny;
-        }
+	Particle::Particle(int Inx, int Iny, int bounciness, int ParticleId, int gravityRate, vector<int> Color) {
+		x = Inx;
+		y = Iny;
+		bounceHeight = bounciness;
+		id = ParticleId;
+		gravRate = gravityRate;
+		color = Color;
+	}
 
-    public:
-        void Draw(Display *dis, Window win, GC gc) {
-            XDrawPoint(dis, win, gc, x, y);
-        }
-        void Gravity(int w, int h) {
-            if (not x > -1) {
-                x = 0;
-            }
-            else if (not x < w) {
-                x = w-1;
-            }
-            else {
-                // ToDo: 1/5th chance to randomly move left / right 
-            }
+	void Particle::Draw(Display *dis, Window win, GC gc, int ParticleSize) {
+		setColor(dis, gc, color);
+		XDrawRectangle(dis, win, gc, x*ParticleSize, y*ParticleSize, ParticleSize, ParticleSize);
+	}
+	void Particle::Gravity(int w, int h) {
+		if (not (x > -1)) {
+			x = 0;
+		}
+		else if (not (x < w)) {
+			x = w-1;
+		}
+		else {
+			if (random(0, 1) == 1) {
+				if (random(0, 1) == 1) {
+					if (random(0, 1) == 1) {
+						x = x + random(-1, 1);
+					}
+				}
+			}
+		}
 
-            if ((y > -1) and (y < h-1) and (not bounce)) {
-                y += 1;
-            }
+		if ((y > -1) and (y < h-1) and (not bounce)) {
+			y = y + (1 * gravRate);
+		}
+		else {
+			bounce = true;
+			Particle::Bounce(w, h);
+		}
 
-        }
-};
+	}
+
+	void Particle::Bounce(int w, int h) {
+		if (y >= (h - bounceHeight)) {
+			y -= 1;
+		}
+		else {
+			bounce = false;
+		}
+	}
+
+	void Particle::Collision(Particle self, list<Particle> ParticleList) {
+		for (Particle & particle : ParticleList) {
+			if (not(particle.id == id) and (particle.x == x) and (particle.y == y)) {
+				if (random(0, 1) == 0) {
+					y += random(-1, 1);
+				}
+				else {
+					x += random(-1, 1);
+				}
+			}
+		}
+	}
+
+
+	Particle GetParticle(list<Particle>Particles, int i) {
+		auto it1 = next(Particles.begin(), i - 1);
+		return *it1;
+	};
+
+}
